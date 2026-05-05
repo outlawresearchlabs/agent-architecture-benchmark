@@ -32,7 +32,7 @@ from pathlib import Path
 
 CYBERGYM_DIR = "/opt/cybergym"
 CYBERGYM_DATA = "/opt/cybergym/cybergym_data"
-ARCX_BIN = "/home/djones/arcx/arcx-agent/packages/opencode/dist/@arcx-agent/cli-linux-x64/bin/arcx"
+ARCX_BIN = os.environ.get("ARCX_BIN", "/home/djones/arcx/agent/packages/opencode/dist/@arcx-agent/cli-linux-x64/bin/arcx")
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results", "cybergym")
 WORKSPACE_BASE = "/tmp/cybergym_benchmark"
 
