@@ -26,7 +26,7 @@ from programdev_benchmark import (
 )
 from claude_code_benchmark import LEAN_RULES, VERBOSE_MAST
 
-ARCX_BIN = "/home/djones/arcx/arcx-agent/packages/opencode/dist/@arcx-agent/cli-linux-x64/bin/arcx"
+ARCX_BIN = "/home/djones/arcx/agent/packages/opencode/dist/@arcx-agent/cli-linux-x64/bin/arcx"
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results", "arcx")
 WORKSPACE_BASE = "/tmp/arcx_benchmark"
 
