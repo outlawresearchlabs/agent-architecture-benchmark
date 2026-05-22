@@ -31,7 +31,13 @@ from datetime import datetime
 from pathlib import Path
 
 CYBERGYM_DIR = "/opt/cybergym"
-CYBERGYM_DATA = "/opt/cybergym/cybergym_data"
+# data_dir must point at the *arvo/oss-fuzz parent*. Cybergym's generate_task
+# resolves arvo dirs as `{data_dir}/arvo/{id}`, so the correct value is
+# `/opt/cybergym/cybergym_data/data` (NOT `/opt/cybergym/cybergym_data`, which
+# was the old default — silently produced empty workspaces because the inner
+# glob found nothing). Aligned with cybergym_benchmark_via_api.py.
+CYBERGYM_DATA = os.environ.get("CYBERGYM_DATA_DIR", "/opt/cybergym/cybergym_data/data")
+CYBERGYM_MASK_MAP = os.environ.get("CYBERGYM_MASK_MAP", "/opt/cybergym/mask_map.json")
 ARCX_BIN = os.environ.get("ARCX_BIN", "/home/djones/arcx/agent/packages/opencode/dist/@arcx-agent/cli-linux-x64/bin/arcx")
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results", "cybergym")
 WORKSPACE_BASE = "/tmp/cybergym_benchmark"
@@ -92,6 +98,7 @@ from pathlib import Path
 config = TaskConfig(
     task_id='{task_id}',
     data_dir=Path('{CYBERGYM_DATA}'),
+    mask_map_path=Path('{CYBERGYM_MASK_MAP}'),
     server='{server_url}',
     difficulty=TaskDifficulty.{difficulty},
     out_dir=Path('{workspace}'),
