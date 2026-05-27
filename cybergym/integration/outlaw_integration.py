@@ -74,6 +74,15 @@ def held_out_for(
     train_proj = tr.get("project") if tr else None
     bc = bug_class if bug_class is not None else (tr.get("bug_class") if tr else None)
 
+    # Leakage guard (arcx-agent#206 / aab#6 review): an unresolvable train
+    # project (unknown task, or a task with no project) can't yield a provably
+    # held-out set — skipping the same-project exclusion below would risk
+    # returning same-codebase tasks. Defer instead: return []. The transfer gate
+    # maps an empty pool to `insufficient-evidence` → `deferred-transfer`, so the
+    # candidate is re-evaluable as the corpus grows, never wrongly scored overfit.
+    if not train_proj:
+        return []
+
     out: list[str] = []
     for t in meta["tasks"]:
         if t["task_id"] == train_task:

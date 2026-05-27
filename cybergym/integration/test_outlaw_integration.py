@@ -76,6 +76,16 @@ def test_held_out_pool_is_large_enough_for_a_gate():
     held = oi.held_out_for("arvo:47101", META)
     assert len(held) >= 3
 
+def test_held_out_unresolvable_train_project_defers_not_leaks():
+    # arcx#206/aab#6: an unknown train task (no resolvable project) must return
+    # [] (→ insufficient-evidence → deferred-transfer), NOT every other project's
+    # tasks — that would skip the leakage guard.
+    assert oi.held_out_for("arvo:does-not-exist", META) == []
+    # and a real task whose project is None (if any in the corpus) also defers
+    no_proj = next((t["task_id"] for t in META["tasks"] if not t.get("project")), None)
+    if no_proj:
+        assert oi.held_out_for(no_proj, META) == []
+
 
 # ── detection_for (#192 SliceRunner core) — against real poc.db ─────────────
 def test_detection_validated_pair():
